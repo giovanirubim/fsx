@@ -163,9 +163,9 @@ if (argMap.h) {
 		'    -h | -help',
 		'',
 		'Regex formats',
-		'    regex',
-		'    /regex/',
-		'    /regex/flags',
+		'    <regex>',
+		'    /<regex>/',
+		'    /<regex>/<flags>',
 	].join('\n'));
 } else {
 	console.log(`${ explore(root) } matches`);

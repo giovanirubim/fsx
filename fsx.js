@@ -58,8 +58,10 @@ const explore = (dir) => {
 };
 const argMap = {};
 const nArgArg = {};
+const aliasMap = {};
 const addArg = (names, nArgs, def) => {
-	names.forEach(name => {
+	names.forEach((name, i) => {
+		aliasMap[name] = names[0];
 		argMap[name] = def;
 		nArgArg[name] = nArgs;
 	});
@@ -72,6 +74,7 @@ addArg(['c', 'content'], 1, null);
 addArg(['ic', 'ignore-content'], 1, null);
 addArg(['r', 'run'], 1, null);
 addArg(['R', 'recursive'], 0, false);
+addArg(['h', 'help'], 0, false);
 const { argv } = process;
 let root = null;
 for (let i=2; i<argv.length; ++i) {
@@ -86,10 +89,11 @@ for (let i=2; i<argv.length; ++i) {
 		}
 	}
 	let name = str.substr(1);
-	if (!(name in argMap)) {
+	if (!(name in aliasMap)) {
 		console.log('Invalid argument ' + str);
 		process.exit(1);
 	}
+	name = aliasMap[name];
 	if (nArgArg[name]) {
 		argMap[name] = argv[++i] || null;
 	} else {
@@ -139,4 +143,30 @@ if (!root) {
 		root = root.replace(regex, '\\');
 	}
 }
-console.log(`${ explore(root) } matches`);
+if (argMap.h) {
+	console.log([
+		'$ fsx [dir path] [arguments]',
+		'',
+		'Regex arguments',
+		'    -n | -name <regex>',
+		'    -in | -ignore-name <regex>',
+		'    -d | -dir | -directory <regex>',
+		'    -id | -ignore-dir | -ignore-directory <regex>',
+		'    -c | -content <regex>',
+		'    -ic | -ignore-content <regex>',
+		'',
+		'Run ($path will be replace by the file path name)',
+		'    -r | -run <command>',
+		'',
+		'Flags',
+		'    -R | -recursive',
+		'    -h | -help',
+		'',
+		'Regex formats',
+		'    regex',
+		'    /regex/',
+		'    /regex/flags',
+	].join('\n'));
+} else {
+	console.log(`${ explore(root) } matches`);
+}

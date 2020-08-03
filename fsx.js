@@ -155,7 +155,7 @@ if (argMap.h) {
 		'    -c | -content <regex>',
 		'    -ic | -ignore-content <regex>',
 		'',
-		'Run ($path will be replace by the file path name)',
+		'Run ($path will be replaced by the file path name)',
 		'    -r | -run <command>',
 		'',
 		'Flags',
